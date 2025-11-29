@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -11,12 +12,14 @@ public class Bullet : MonoBehaviour
 
     private Vector3 _direction;
 
-    private void Start()
+    private Weapon _weapon;
+
+    public void StartBullet(Weapon weapon)
     {
         _startPos = transform.position;
         _direction = transform.forward;
+        _weapon = weapon;
     }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -30,6 +33,11 @@ public class Bullet : MonoBehaviour
                 Destroy(gameObject);
             }
         }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
+            collision.gameObject.GetComponent<Enemy>().GetHit(1);
+        }
     }
     private void Update()
     {
@@ -42,4 +50,6 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    
 }

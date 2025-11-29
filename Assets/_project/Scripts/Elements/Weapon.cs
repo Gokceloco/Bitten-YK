@@ -22,9 +22,10 @@ public class Weapon : MonoBehaviour
     private void Shoot()
     {
         var newBullet = Instantiate(bulletPrefab);
-        newBullet.transform.position = muzzleTransform.position;
+        newBullet.transform.position = muzzleTransform.position;        
         newBullet.transform
             .LookAt(muzzleTransform.position + muzzleTransform.forward);
+        newBullet.StartBullet(this);
         _lastShootTime = Time.time;
     }
 }

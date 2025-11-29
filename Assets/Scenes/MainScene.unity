@@ -588,7 +588,7 @@ GameObject:
   - component: {fileID: 1291834521}
   - component: {fileID: 1291834523}
   - component: {fileID: 1291834522}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +678,7 @@ GameObject:
   - component: {fileID: 1439343106}
   - component: {fileID: 1439343105}
   - component: {fileID: 1439343104}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -776,7 +776,7 @@ GameObject:
   - component: {fileID: 1630293908}
   - component: {fileID: 1630293907}
   - component: {fileID: 1630293906}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -884,7 +884,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1825964854}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -916,7 +916,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2020925929}
   - component: {fileID: 2020925930}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Weapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -955,6 +955,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7788139666083849775, guid: 555e1781476e9b64cbf1efe491f40797, type: 3}
   muzzleTransform: {fileID: 1825964854}
   attackRate: 0.12
+  damage: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
