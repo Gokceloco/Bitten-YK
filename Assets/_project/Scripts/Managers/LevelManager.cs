@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public Player player;
     public int levelNo;
     public List<Level> levels;
 
@@ -20,6 +21,7 @@ public class LevelManager : MonoBehaviour
         levelNo = Mathf.Clamp(levelNo, 1, levels.Count);
 
         _currentLevel = Instantiate(levels[levelNo-1]);
+        _currentLevel.StartLevel(this);
     }
 
     private void DeletePreviousLevel()

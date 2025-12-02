@@ -476,6 +476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1ab06646719cb3418a34a1b1abd4016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  player: {fileID: 1439343105}
   levelNo: 2
   levels:
   - {fileID: 9207067540232085445, guid: e95b0bfdcc573184d90808a7516eceec, type: 3}
@@ -955,7 +956,6 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7788139666083849775, guid: 555e1781476e9b64cbf1efe491f40797, type: 3}
   muzzleTransform: {fileID: 1825964854}
   attackRate: 0.12
-  damage: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
