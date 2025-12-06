@@ -1,4 +1,6 @@
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
@@ -15,23 +17,29 @@ public class Enemy : MonoBehaviour
 
     private bool _isAttackInProgress;
 
+    private NavMeshAgent _agent;
+
+    private Vector3 _vel;
+
     public void StartEnemy(Level level, Player player)
     {
         _level = level;
         _player = player;
+        _agent = GetComponent<NavMeshAgent>();
         _currentHealth = startHealth;
     }
 
     private void Update()
     {
         var distanceToPlayer = (_player.transform.position - transform.position).magnitude;
+        var angleToPlayer = Vector3.Angle(transform.forward, _player.transform.position - transform.position);
 
         //Decider Logic
         if (distanceToPlayer < 2)
         {
             actionState = ActionState.Attack;
         }
-        else if (distanceToPlayer < 10)
+        else if (distanceToPlayer < 10 && !_isAttackInProgress)
         {
             actionState = ActionState.WalkTowardsPlayer;
         }
@@ -45,19 +53,33 @@ public class Enemy : MonoBehaviour
         }
         if (actionState == ActionState.WalkTowardsPlayer)
         {
-            var direction = (_player.transform.position - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
+            _agent.isStopped = false;
+            _agent.SetDestination(_player.transform.position);
         }
         if (actionState == ActionState.Attack && !_isAttackInProgress)
         {
             print("Start Attack");
+            _agent.isStopped = true;
             _isAttackInProgress = true;
+            transform.DOScaleY(1.5f, 1.7f);
+            transform.DOScaleY(1, .3f).SetDelay(1.7f);
             Invoke(nameof(FinalizeAttack), 2); 
         }
     }
 
+    private void OnDestroy()
+    {
+        transform.DOKill();
+    }
+
     void FinalizeAttack()
     {
+        var distanceToPlayer = (_player.transform.position - transform.position).magnitude;
+        var angleToPlayer = Vector3.Angle(transform.forward, _player.transform.position - transform.position);
+        if (distanceToPlayer < 2 && angleToPlayer < 45)
+        {
+            _player.GetHit(1);
+        }        
         _isAttackInProgress = false;
     }
 
