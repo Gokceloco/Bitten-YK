@@ -1,14 +1,19 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public GameDirector gameDirector;
     public Bullet bulletPrefab;
     public Transform muzzleTransform;
 
     public float attackRate;
 
     private float _lastShootTime;
+
+    public ParticleSystem muzzlePS;
+    public Light muzzleLight;
 
     private void Update()
     {
@@ -27,5 +32,10 @@ public class Weapon : MonoBehaviour
             .LookAt(muzzleTransform.position + muzzleTransform.forward);
         newBullet.StartBullet(this);
         _lastShootTime = Time.time;
+        muzzlePS.Play();
+
+        muzzleLight.DOKill();
+        muzzleLight.intensity = 0;
+        muzzleLight.DOIntensity(50,.05f).SetLoops(2, LoopType.Yoyo);
     }
 }

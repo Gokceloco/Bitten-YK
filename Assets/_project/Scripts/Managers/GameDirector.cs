@@ -4,18 +4,19 @@ public class GameDirector : MonoBehaviour
 {
     public GameState gameState;
     public LevelManager levelManager;
+    public FXManager fxManager;
     public Player player;
 
     private void Start()
     {
-        StartLevel();
+        RestartLevel();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            StartLevel();
+            RestartLevel();
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
@@ -27,7 +28,7 @@ public class GameDirector : MonoBehaviour
         }
     }
 
-    public void StartLevel() 
+    public void RestartLevel() 
     {
         gameState = GameState.GamePlay;
         levelManager.StartLevel();
@@ -36,12 +37,24 @@ public class GameDirector : MonoBehaviour
     public void LoadNextLevel()
     {
         levelManager.levelNo++;
-        StartLevel();
+        RestartLevel();
     }
     public void LoadPreviousLevel()
     {
         levelManager.levelNo--;
-        StartLevel();
+        RestartLevel();
+    }
+
+    public void LevelCompleted()
+    {
+        gameState = GameState.Win;
+        Invoke(nameof(LoadNextLevel), 2f);
+    }
+
+    public void LevelFailed()
+    {
+        gameState = GameState.Lose;
+        Invoke(nameof(RestartLevel), 2f);
     }
 }
 

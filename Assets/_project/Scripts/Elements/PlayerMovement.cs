@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public GameDirector gameDirector;
+    public PlayerAnimator playerAnimator;
+
     public float walkSpeed;
     public float runSpeed;
     public float jumpForce;
@@ -14,8 +17,12 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody _rb;
 
+    private Vector3 _direction;
+
     Vector3 vel;
     public float lookSmoothTime;
+
+    public Transform shadowTransform;
 
     private void Awake()
     {
@@ -24,12 +31,35 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        if (gameDirector.gameState != GameState.GamePlay)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Space) && IsTouchingGround())
         {
             Jump();
         }
         MovePlayer(GetDirection());
         LookAtMouse();
+        SetShadowPosition();
+    }
+
+    private void SetShadowPosition()
+    {
+        var shadowPos = transform.position;
+
+        if (Physics.Raycast(transform.position + Vector3.up, Vector3.down, out var hit, 5, jumpLayerMask)) 
+        {
+            shadowTransform.gameObject.SetActive(true);
+            shadowPos.y = hit.point.y + .1f;
+        }
+        else
+        {
+            shadowTransform.gameObject.SetActive(false);
+        }
+
+        shadowTransform.position = shadowPos;
     }
 
     private void LookAtMouse()
@@ -43,6 +73,9 @@ public class PlayerMovement : MonoBehaviour
             lookPoint.y = transform.position.y;
 
             transform.LookAt(lookPoint);
+
+            var angle = Vector3.SignedAngle(_direction, lookPoint - transform.position, Vector3.up);
+            playerAnimator.SetWalkDirection(angle);
         }
     }
 
@@ -76,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
         {
             dir += Vector3.right;
         }
-
+        _direction = dir;
         return dir;
     }
 
@@ -97,6 +130,18 @@ public class PlayerMovement : MonoBehaviour
         {
             speed = runSpeed;
         }
+
+        if (gameDirector.gameState == GameState.GamePlay)
+        {
+            if (dir.magnitude == 0)
+            {
+                playerAnimator.ChangeAnimationState("Idle");
+            }
+            else
+            {
+                playerAnimator.ChangeAnimationState("Walk");
+            }
+        }        
 
         _rb.linearVelocity = dir.normalized * speed + yVelocity;
     }

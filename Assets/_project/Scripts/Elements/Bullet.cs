@@ -35,6 +35,7 @@ public class Bullet : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            _weapon.gameDirector.fxManager.PlayZombieImpactPS(transform.position, _direction);
             Destroy(gameObject);
             collision.gameObject.GetComponent<Enemy>().GetHit(1);
         }

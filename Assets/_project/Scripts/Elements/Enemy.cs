@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,6 +28,12 @@ public class Enemy : MonoBehaviour
 
     private EnemyAnimator _enemyAnimator;
 
+    public Collider aliveCollider;
+
+    private bool _forceWalkTowardsPlayer;
+
+    public List<Light> lights;
+
     public void StartEnemy(Level level, Player player)
     {
         _level = level;
@@ -51,7 +58,7 @@ public class Enemy : MonoBehaviour
         {
             actionState = ActionState.Attack;
         }
-        else if (distanceToPlayer < 10 && !_isAttackInProgress)
+        else if ((distanceToPlayer < 10 || _forceWalkTowardsPlayer) && !_isAttackInProgress)
         {
             actionState = ActionState.WalkTowardsPlayer;
         }
@@ -101,6 +108,11 @@ public class Enemy : MonoBehaviour
 
     public void GetHit(int damage)
     {
+        if (actionState == ActionState.Dead)
+        {
+            return;
+        }
+        _forceWalkTowardsPlayer = true;
         _currentHealth -= damage;
         healthBar.SetFillBar((float)_currentHealth / startHealth);
         if (_currentHealth <= 0)
@@ -111,11 +123,16 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        aliveCollider.enabled = false;
         actionState = ActionState.Dead;
         _enemyAnimator.PlayDieAnimation();
         if (_attackCoroutine != null)
         {
             StopCoroutine(_attackCoroutine);
+        }
+        foreach (var l in lights)
+        {
+            l.enabled = false;
         }
         Destroy(gameObject, 3);
     }
