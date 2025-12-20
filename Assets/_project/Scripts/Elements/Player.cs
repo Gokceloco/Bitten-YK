@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
         _curHealth = startHealth;
         gameObject.SetActive(true);
         isDead = false;
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,7 +37,7 @@ public class Player : MonoBehaviour
     {
         if (transform.position.y < -15f && !isDead)
         {
-            Die();
+            Die(0);
         }
     }
 
@@ -43,16 +45,17 @@ public class Player : MonoBehaviour
     {
         _curHealth -= damage;
         healthBar.SetFillBar((float) _curHealth / startHealth);
+        gameDirector.audioManager.PlayImpactAS();
         if (_curHealth <= 0 && !isDead)
         {
-            Die();
+            Die(2);
         }
     }
 
-    private void Die()
+    private void Die(float uiDelay)
     {
         isDead = true;
-        gameDirector.LevelFailed();
-        gameObject.SetActive(false);
+        gameDirector.LevelFailed(uiDelay);
+        playerAnimator.ChangeAnimationState("Die");
     }
 }

@@ -18,7 +18,8 @@ public class Weapon : MonoBehaviour
     private void Update()
     {
         var timeSinceLastShoot = Time.time - _lastShootTime;
-        if (Input.GetMouseButton(0) && timeSinceLastShoot > attackRate)
+        if (Input.GetMouseButton(0) && timeSinceLastShoot > attackRate
+            && gameDirector.gameState == GameState.GamePlay)
         {
             Shoot();
         }
@@ -37,5 +38,6 @@ public class Weapon : MonoBehaviour
         muzzleLight.DOKill();
         muzzleLight.intensity = 0;
         muzzleLight.DOIntensity(50,.05f).SetLoops(2, LoopType.Yoyo);
+        gameDirector.audioManager.PlayShootAS();
     }
 }

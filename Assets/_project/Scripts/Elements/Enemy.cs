@@ -34,6 +34,16 @@ public class Enemy : MonoBehaviour
 
     public List<Light> lights;
 
+    private bool _inGetHit;
+
+    public List<SkinnedMeshRenderer> smrs;
+
+    public Material flashMaterial;
+
+    public List<Material> originalMaterials;
+
+    private bool _didSeePlayer;
+
     public void StartEnemy(Level level, Player player)
     {
         _level = level;
@@ -41,6 +51,11 @@ public class Enemy : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _currentHealth = startHealth;
         _enemyAnimator = GetComponent<EnemyAnimator>();
+
+        for (int i = 0; i < smrs.Count; i++)
+        {
+            originalMaterials.Add(smrs[i].material);
+        }
     }
 
     private void Update()
@@ -60,6 +75,11 @@ public class Enemy : MonoBehaviour
         }
         else if ((distanceToPlayer < 10 || _forceWalkTowardsPlayer) && !_isAttackInProgress)
         {
+            if (!_didSeePlayer)
+            {
+                _didSeePlayer = true;
+                _player.gameDirector.audioManager.PlayZombieGrowlAS();
+            }
             actionState = ActionState.WalkTowardsPlayer;
         }
 
@@ -68,7 +88,7 @@ public class Enemy : MonoBehaviour
         {
             _enemyAnimator.PlayIdleAnimation();
         }
-        if (actionState == ActionState.WalkTowardsPlayer)
+        if (actionState == ActionState.WalkTowardsPlayer && !_inGetHit)
         {
             _agent.isStopped = false;
             _agent.SetDestination(_player.transform.position);
@@ -114,11 +134,30 @@ public class Enemy : MonoBehaviour
         }
         _forceWalkTowardsPlayer = true;
         _currentHealth -= damage;
+        StartCoroutine(GetHitCoroutine());
+        _player.gameDirector.audioManager.PlayImpactAS();
         healthBar.SetFillBar((float)_currentHealth / startHealth);
         if (_currentHealth <= 0)
         {
             Die();
         }
+    }
+
+    IEnumerator GetHitCoroutine()
+    {
+        _inGetHit = true;
+        _agent.isStopped = true;
+        foreach (var s in smrs)
+        {
+            s.material = flashMaterial;
+        }
+        yield return new WaitForSeconds(.2f);
+
+        for (int i = 0; i < smrs.Count; i++)
+        {
+            smrs[i].material = originalMaterials[i];
+        }
+        _inGetHit = false;
     }
 
     private void Die()
