@@ -58,4 +58,9 @@ public class Player : MonoBehaviour
         gameDirector.LevelFailed(uiDelay);
         playerAnimator.ChangeAnimationState("Die");
     }
+    public void DieWithTimer()
+    {
+        isDead = true;
+        playerAnimator.ChangeAnimationState("Die2");
+    }
 }

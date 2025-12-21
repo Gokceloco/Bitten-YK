@@ -7,22 +7,36 @@ public class UIManager : MonoBehaviour
     public MainMenu mainMenu;
     public VictoryUI victoryUI;
     public FailUI failUI;
-
+    public MessageUI messageUI;
+    public TimerUI timerUI;
 
     //ShowHideMenu
     public void ShowMainMenu()
     {
         mainMenu.Show();
         victoryUI.Hide();
-        failUI.Hide();
+        failUI.Hide();        
+        HideIngameUI();
+        messageUI.Hide();
     }
     public void ShowVictoryUI(float delay)
     {
         victoryUI.Show(delay);
+        HideIngameUI();
     }
     public void ShowFailUI(float delay)
     {
         failUI.Show(delay);
+        HideIngameUI();
+    }
+
+    public void ShowIngameUI()
+    {
+        timerUI.Show();
+    }
+    public void HideIngameUI()
+    {
+        timerUI.Hide();        
     }
 
 

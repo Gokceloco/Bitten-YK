@@ -4,15 +4,25 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public AudioSource shootAS;
+    public AudioSource shotgunAS;
     public AudioSource impactAS;
     public List<AudioSource> victoryASs;
     public List<AudioSource> failASs;
     public List<AudioSource> ambientASs;
     public AudioSource growlAS;
+    public AudioSource timerAS;
 
     public void PlayShootAS()
     {
         shootAS.Play();
+    }
+    public void PlayShotgunAS()
+    {
+        shotgunAS.Play();
+    }
+    public void PlayTimerAS()
+    {
+        timerAS.Play();
     }
     public void PlayZombieGrowlAS()
     {

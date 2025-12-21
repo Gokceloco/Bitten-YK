@@ -7,6 +7,7 @@ public class GameDirector : MonoBehaviour
     public FXManager fxManager;
     public Player player;
     public AudioManager audioManager;
+    public TimerManager timerManager;
     public UIManager uiManager;
 
     private void Start()
@@ -32,10 +33,22 @@ public class GameDirector : MonoBehaviour
 
     public void RestartLevel() 
     {
-        gameState = GameState.GamePlay;
+        Invoke(nameof(ChangeGameStateToGameplay), .1f);
         levelManager.StartLevel();
+        timerManager.RestartTimerManager(levelManager.GetCurrentLevelTime());
         player.RestartPlayer();
         audioManager.PlayAmbientAS();
+        if (levelManager.levelNo == 1)
+        {
+            uiManager.messageUI.ShowMessage("WASD TO MOVE!", 0, 2);
+            uiManager.messageUI.ShowMessage("FIND THE POTION BEFORE TIME RUNS OUT!", 3, 2);
+        }
+        uiManager.ShowIngameUI();
+    }
+
+    void ChangeGameStateToGameplay()
+    {
+        gameState = GameState.GamePlay;
     }
     public void LoadNextLevel()
     {

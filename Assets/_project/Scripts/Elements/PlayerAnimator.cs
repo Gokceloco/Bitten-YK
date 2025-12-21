@@ -10,6 +10,7 @@ public class PlayerAnimator : MonoBehaviour
         animator.SetBool("Walk", false);
         animator.SetBool("Drink", false);
         animator.SetBool("Die", false);
+        animator.SetBool("Die2", false);
         animator.SetBool(key, true);
     }
 

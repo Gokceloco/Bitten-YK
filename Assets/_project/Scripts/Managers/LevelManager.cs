@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
+    public GameDirector gameDirector;
     public Player player;
     public int levelNo;
     public List<Level> levels;
@@ -14,6 +15,11 @@ public class LevelManager : MonoBehaviour
     {
         DeletePreviousLevel();
         CreateNewLevel();
+    }
+
+    public float GetCurrentLevelTime()
+    {
+        return _currentLevel.levelTime;
     }
 
     private void CreateNewLevel()
